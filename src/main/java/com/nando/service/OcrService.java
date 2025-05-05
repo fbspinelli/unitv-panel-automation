@@ -37,10 +37,7 @@ public class OcrService {
                     sb.append(block.text().replaceAll("\\s+", ""));
                 }
             }
-
             String textoFinal = sb.toString();
-            System.out.println("Texto concatenado: " + textoFinal);
-
             textractClient.close();
             return textoFinal;
 
