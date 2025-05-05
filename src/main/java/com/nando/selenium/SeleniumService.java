@@ -6,20 +6,16 @@ import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
+import java.io.File;
+
 
 @ApplicationScoped
 public class SeleniumService {
 
     private boolean isHeadless;
 
-    private ChromeDriver chromeDriver;
-
-    private String webdriveFile;
-
-    public SeleniumService(@ConfigProperty(name = "browser.isHeadless") boolean isHeadless,
-                           @ConfigProperty(name = "webdriver") String webdriveFile) {
+    public SeleniumService(@ConfigProperty(name = "browser.isHeadless") boolean isHeadless) {
         this.isHeadless = isHeadless;
-        this.webdriveFile = webdriveFile;
     }
 
     public ChromeDriver getBrowser() {
@@ -28,7 +24,10 @@ public class SeleniumService {
             if (isHeadless) {
                 chromeOptions.addArguments("--headless=new");
             }
-            return new ChromeDriverBuilder().build(chromeOptions, webdriveFile);
+            String chromedriverPath = new File(
+                    getClass().getClassLoader().getResource("chromedriver").getFile()
+            ).getAbsolutePath();
+            return new ChromeDriverBuilder().build(chromeOptions, chromedriverPath);
     }
 
 }
