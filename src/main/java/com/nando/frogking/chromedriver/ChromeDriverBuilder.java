@@ -479,7 +479,7 @@ public class ChromeDriverBuilder {
         Process browser = createBrowserProcess(chromeOptions,needPrintChromeInfo);
 
         //step12, make undetectedChrome chrome driver
-        System.setProperty("webdriver.chrome.driver", "/home/fernando/hobbyspace/unitv-panel-automation/src/main/resources/chromedriver");
+        System.setProperty("webdriver.chrome.driver", "/home/fernando/Desktop/workspace/unitv-panel-automation/src/main/resources/chromedriver");
         UndetectedChromeDriver undetectedChromeDriver =
                 new UndetectedChromeDriver(chromeOptions,headless,_keepUserDataDir,_userDataDir,browser);
 

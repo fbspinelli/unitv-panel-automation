@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.util.List;
 
 @ApplicationScoped
 public class LoginPage {
@@ -59,6 +60,15 @@ public class LoginPage {
 
         WebElement inputTextCaptcha = browser.findElement(By.id("form_item_validateCode"));
         inputTextCaptcha.sendKeys(captchaText.replaceAll("\\s+", ""));
+
+        List<WebElement> elements = browser.findElements(By.xpath("//*[@id=\"htmlRoot\"]/body/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div/div[2]/label[2]"));
+        if (!elements.isEmpty()) {
+            elements.get(0).click();
+            WebElement btnSendCodeEmail = browser.findElement(By.xpath("//*[@id=\"htmlRoot\"]/body/div[2]/div/div[2]/div/div[2]/div[2]/div/div[1]/div/div/form/div[2]/div/div/div/span/button"));
+            btnSendCodeEmail.click();
+
+        }
+
     }
 
 }

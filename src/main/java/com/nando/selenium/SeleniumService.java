@@ -23,16 +23,12 @@ public class SeleniumService {
     }
 
     public ChromeDriver getBrowser() {
-        if (chromeDriver == null) {
             ChromeOptions chromeOptions = new ChromeOptions();
             chromeOptions.addArguments("--window-size=1920,1080");
             if (isHeadless) {
                 chromeOptions.addArguments("--headless=new");
             }
-            chromeDriver = new ChromeDriverBuilder().build(chromeOptions, webdriveFile);
-
-        }
-        return chromeDriver;
+            return new ChromeDriverBuilder().build(chromeOptions, webdriveFile);
     }
 
 }
