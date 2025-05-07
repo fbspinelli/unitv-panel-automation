@@ -7,6 +7,8 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @ApplicationScoped
@@ -24,6 +26,12 @@ public class SeleniumService {
             if (isHeadless) {
                 chromeOptions.addArguments("--headless=new");
             }
+            Map<String, Object> prefs = new HashMap<>();
+            prefs.put("download.prompt_for_download", false);
+            prefs.put("download.default_directory", "/tmp/"); // ou outro diretório no container
+            prefs.put("safebrowsing.enabled", true);
+            chromeOptions.setExperimentalOption("prefs", prefs);
+
             String chromedriverPath = new File(
                     getClass().getClassLoader().getResource("chromedriver").getFile()
             ).getAbsolutePath();

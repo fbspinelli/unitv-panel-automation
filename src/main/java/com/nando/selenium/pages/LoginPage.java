@@ -1,7 +1,9 @@
 package com.nando.selenium.pages;
 
+import com.nando.exception.ExtractCodeException;
 import com.nando.exception.LogginErrorException;
 import com.nando.selenium.SeleniumService;
+import com.nando.service.EmailService;
 import com.nando.service.OcrService;
 import jakarta.enterprise.context.ApplicationScoped;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
@@ -13,6 +15,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 import java.util.Objects;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @ApplicationScoped
 public class LoginPage {
@@ -30,34 +34,37 @@ public class LoginPage {
 
     private ChromeDriver browser;
 
+    private EmailService emailService;
+
     public LoginPage(SeleniumService seleniumService,
                      @ConfigProperty(name = "panel.url") String panelUrl,
                      @ConfigProperty(name = "panel.login") String login,
                      @ConfigProperty(name = "panel.password") String password,
-                     OcrService ocrService) {
+                     OcrService ocrService,
+                     EmailService emailService) {
         this.seleniumService = seleniumService;
         this.panelUrl = panelUrl;
         this.login = login;
         this.password = password;
         this.ocrService = ocrService;
+        this.emailService = emailService;
     }
 
-    public void executeLogin() {
+    public ChromeDriver executeLogin() {
         browser = seleniumService.getBrowser();
         setWait(browser);
-
-        browser.get(panelUrl);
+        browser.get(panelUrl + "/login");
 
         putLogin();
         putPassword();
         putCaptcha();
         clickBtnLogin();
-
         if (popupCodeEmailIsPresent()) {
             fillCodeFromEmail();
             clickConfirm();
         }
         verifyIsLoggedOrException();
+        return browser;
     }
 
     private void verifyIsLoggedOrException() {
@@ -86,7 +93,19 @@ public class LoginPage {
         btnSendCodeEmail.click();
 
         WebElement inputTextCode = browser.findElement(By.id("form_item_verCode"));
-        inputTextCode.sendKeys("code vindo do service que pega do email");
+        String code = extractCode();
+        inputTextCode.sendKeys(code);
+    }
+
+    private String extractCode() {
+        String bodyEmail = emailService.getBodyLastEmail();
+        Pattern pattern = Pattern.compile("<div[^>]*>\\s*(\\d{4})\\s*</div>");
+        Matcher matcher = pattern.matcher(bodyEmail);
+        if (matcher.find()) {
+            return matcher.group(1);
+        } else {
+            throw new ExtractCodeException();
+        }
     }
 
     private boolean popupCodeEmailIsPresent() {
