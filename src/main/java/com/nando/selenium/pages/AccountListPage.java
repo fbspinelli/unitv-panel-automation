@@ -27,15 +27,16 @@ public class AccountListPage {
         browser.get(panelUrl + "/account/list");
         webDriverWait = new WebDriverWait(browser, Duration.ofSeconds(5));
 
-        WebElement btnAllRecords = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
+        WebElement btnDownload = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(
                 "//*[@id=\"app\"]/section/section/section/div[3]/div[2]/div[3]/div[2]/div/div/div/div[1]/div/div/div/div[3]/span[2]/span")));
-        Actions actions = new Actions(browser);
-        actions.moveToElement(btnAllRecords).perform();
 
-        WebElement opcaoDownload = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(
+        Actions actions = new Actions(browser);
+        actions.moveToElement(btnDownload).perform();
+
+        WebElement btnAllRecords = webDriverWait.until(ExpectedConditions.visibilityOfElementLocated(
                 By.xpath("//*[@id=\"app\"]/section/section/section/div[3]/div[2]/div[3]/div[3]/div/div/div/ul/li[1]")
         ));
-        opcaoDownload.click();
+        btnAllRecords.click();
     }
 
 }

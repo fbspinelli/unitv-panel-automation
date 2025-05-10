@@ -21,21 +21,16 @@ public class SeleniumService {
     }
 
     public ChromeDriver getBrowser() {
-            ChromeOptions chromeOptions = new ChromeOptions();
-            chromeOptions.addArguments("--window-size=1920,1080");
-            if (isHeadless) {
-                chromeOptions.addArguments("--headless=new");
-            }
-            Map<String, Object> prefs = new HashMap<>();
-            prefs.put("download.prompt_for_download", false);
-            prefs.put("download.default_directory", "/tmp/"); // ou outro diretório no container
-            prefs.put("safebrowsing.enabled", true);
-            chromeOptions.setExperimentalOption("prefs", prefs);
+        ChromeOptions chromeOptions = new ChromeOptions();
+        chromeOptions.addArguments("--window-size=1920,1080");
+        if (isHeadless) {
+            chromeOptions.addArguments("--headless=new");
+        }
 
-            String chromedriverPath = new File(
-                    getClass().getClassLoader().getResource("chromedriver").getFile()
-            ).getAbsolutePath();
-            return new ChromeDriverBuilder().build(chromeOptions, chromedriverPath);
+        String chromedriverPath = new File(
+                getClass().getClassLoader().getResource("chromedriver").getFile()
+        ).getAbsolutePath();
+        return new ChromeDriverBuilder().build(chromeOptions, chromedriverPath);
     }
 
 }

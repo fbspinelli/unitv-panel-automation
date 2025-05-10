@@ -2,6 +2,8 @@ package com.nando.frogking.chromedriver;
 
 
 import com.alibaba.fastjson.JSONObject;
+import org.eclipse.microprofile.config.Config;
+import org.eclipse.microprofile.config.ConfigProvider;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeDriverService;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -89,7 +91,15 @@ public class ChromeDriverBuilder {
                 return chromeOptions;
             }
         }catch (Exception ignored){ }
-        chromeOptions.setExperimentalOption("debuggerAddress",debugHost+":"+String.valueOf(debugPort));
+        Map<String, Object> prefs = new HashMap<>();
+        prefs.put("download.prompt_for_download", false);
+        prefs.put("download.directory_upgrade", true);
+        prefs.put("profile.default_content_settings.popups", 0);
+        Config config = ConfigProvider.getConfig();
+        String pathDownload = config.getValue("browser.download.path", String.class);
+        prefs.put("download.default_directory", pathDownload);
+        prefs.put("debuggerAddress", debugHost+":"+String.valueOf(debugPort));
+        chromeOptions.setExperimentalOption("prefs", prefs);
         return chromeOptions;
     }
 
